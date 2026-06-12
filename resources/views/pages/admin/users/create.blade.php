@@ -28,25 +28,11 @@
     <div class="bg-parchment border border-cream-200 rounded-card-lg p-6 paper-grain">
         <form action="{{ route('admin.users.store') }}" method="POST">
             @csrf
-            @php
-                $userFields = [
-                    ['name' => 'name', 'label' => 'Nama', 'value' => old('name'), 'required' => true],
-                    ['name' => 'email', 'label' => 'Email', 'type' => 'email', 'value' => old('email'), 'required' => true],
-                    ['name' => 'password', 'label' => 'Password', 'type' => 'password', 'required' => true],
-                    ['name' => 'password_confirmation', 'label' => 'Konfirmasi Password', 'type' => 'password', 'required' => true],
-                    [
-                        'name' => 'role',
-                        'label' => 'Role',
-                        'type' => 'select',
-                        'options' => ['admin' => 'Admin', 'user' => 'User'],
-                        'value' => old('role'),
-                        'required' => true
-                    ],
-                ];
-            @endphp
-
-            <x-organisms.dynamic-form :fields="$userFields" />
-
+            <x-organisms.dynamic-form
+                :fields="$userFields"
+                :cancelUrl="route('admin.users.index')"
+                submitLabel="Simpan Pengguna"
+            />
         </form>
     </div>
 </div>

@@ -28,40 +28,11 @@
     <div class="bg-parchment border border-cream-200 rounded-card-lg p-6 paper-grain">
         <form action="{{ route('admin.items.store') }}" method="POST">
             @csrf
-            @php
-                $itemFields = [
-                    [
-                        'name' => 'book_id',
-                        'label' => 'Buku',
-                        'type' => 'select',
-                        'options' => $books->pluck('title', 'id')->toArray(),
-                        'value' => old('book_id'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'barcode',
-                        'label' => 'Barcode',
-                        'value' => old('barcode'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'status',
-                        'label' => 'Status',
-                        'type' => 'select',
-                        'options' => [
-                            'available' => 'Available',
-                            'loaned' => 'Loaned',
-                            'lost' => 'Lost',
-                            'damaged' => 'Damaged',
-                        ],
-                        'value' => old('status'),
-                        'required' => true
-                    ],
-                ];
-            @endphp
-
-            <x-organisms.dynamic-form :fields="$itemFields" />
-
+            <x-organisms.dynamic-form
+                :fields="$itemFields"
+                :cancelUrl="route('admin.items.index')"
+                submitLabel="Simpan Item"
+            />
         </form>
     </div>
 </div>

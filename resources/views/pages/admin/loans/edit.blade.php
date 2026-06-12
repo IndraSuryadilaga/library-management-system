@@ -29,49 +29,11 @@
         <form action="{{ route('admin.loans.update', $loan) }}" method="POST">
             @csrf
             @method('PUT')
-            @php
-                $loanFields = [
-                    [
-                        'name' => 'user_id',
-                        'label' => 'Pengguna',
-                        'type' => 'select',
-                        'options' => $users->pluck('name', 'id')->toArray(),
-                        'value' => old('user_id', $loan->user_id),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'item_id',
-                        'label' => 'Item',
-                        'type' => 'select',
-                        'options' => $items->pluck('barcode', 'id')->toArray(),
-                        'value' => old('item_id', $loan->item_id),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'loan_date',
-                        'label' => 'Tanggal Pinjam',
-                        'type' => 'date',
-                        'value' => old('loan_date', $loan->loan_date),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'due_date',
-                        'label' => 'Jatuh Tempo',
-                        'type' => 'date',
-                        'value' => old('due_date', $loan->due_date),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'return_date',
-                        'label' => 'Tanggal Kembali (Opsional)',
-                        'type' => 'date',
-                        'value' => old('return_date', $loan->return_date),
-                    ],
-                ];
-            @endphp
-
-            <x-organisms.dynamic-form :fields="$loanFields" />
-
+            <x-organisms.dynamic-form
+                :fields="$loanFields"
+                :cancelUrl="route('admin.loans.index')"
+                submitLabel="Perbarui Peminjaman"
+            />
         </form>
     </div>
 </div>

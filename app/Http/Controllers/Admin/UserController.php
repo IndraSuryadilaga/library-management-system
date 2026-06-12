@@ -13,10 +13,25 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::latest()->paginate(10);
-        return view('pages.admin.users.index', compact('users'));
+        $users = User::filter($request->only(['search', 'role']))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        // Define filter configurations
+        $userFilters = [
+            [
+                'name' => 'role',
+                'label' => 'Role',
+                'placeholder' => 'Semua Role',
+                'options' => ['admin' => 'Admin', 'user' => 'User'],
+                'value' => $request->query('role')
+            ],
+        ];
+
+        return view('pages.admin.users.index', compact('users', 'userFilters'));
     }
 
     /**
@@ -24,7 +39,15 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.users.create');
+        $userFields = [
+            ['name' => 'name', 'label' => 'Nama', 'value' => old('name'), 'required' => true],
+            ['name' => 'email', 'label' => 'Email', 'type' => 'email', 'value' => old('email'), 'required' => true],
+            ['name' => 'password', 'label' => 'Password', 'type' => 'password', 'required' => true],
+            ['name' => 'password_confirmation', 'label' => 'Konfirmasi Password', 'type' => 'password', 'required' => true],
+            ['name' => 'role', 'label' => 'Role', 'type' => 'select', 'options' => ['admin' => 'Admin', 'user' => 'User'], 'value' => old('role'), 'required' => true],
+        ];
+
+        return view('pages.admin.users.create', compact('userFields'));
     }
 
     /**
@@ -46,7 +69,7 @@ class UserController extends Controller
             'role' => $request->role,
         ]);
 
-        return redirect()->route('admin.user.index')
+        return redirect()->route('admin.users.index')
             ->with('success', 'User created successfully.');
     }
 
@@ -55,7 +78,16 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('pages.admin.users.show', compact('user'));
+        $userDetails = [
+            ['label' => 'ID Pengguna', 'value' => $user->id, 'isMono' => true],
+            ['label' => 'Nama', 'value' => $user->name],
+            ['label' => 'Email', 'value' => $user->email],
+            ['label' => 'Role', 'value' => $user->role],
+            ['label' => 'Dibuat pada', 'value' => $user->created_at->format('d F Y')],
+            ['label' => 'Diperbarui pada', 'value' => $user->updated_at->format('d F Y')],
+        ];
+
+        return view('pages.admin.users.show', compact('user', 'userDetails'));
     }
 
     /**
@@ -63,7 +95,15 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('pages.admin.users.edit', compact('user'));
+        $userFields = [
+            ['name' => 'name', 'label' => 'Nama', 'value' => old('name', $user->name), 'required' => true],
+            ['name' => 'email', 'label' => 'Email', 'type' => 'email', 'value' => old('email', $user->email), 'required' => true],
+            ['name' => 'password', 'label' => 'Password Baru (Opsional)', 'type' => 'password'],
+            ['name' => 'password_confirmation', 'label' => 'Konfirmasi Password Baru', 'type' => 'password'],
+            ['name' => 'role', 'label' => 'Role', 'type' => 'select', 'options' => ['admin' => 'Admin', 'user' => 'User'], 'value' => old('role', $user->role), 'required' => true],
+        ];
+
+        return view('pages.admin.users.edit', compact('user', 'userFields'));
     }
 
     /**
@@ -85,7 +125,7 @@ class UserController extends Controller
 
         $user->update($data);
 
-        return redirect()->route('admin.user.index')
+        return redirect()->route('admin.users.index')
             ->with('success', 'User updated successfully.');
     }
 
@@ -96,7 +136,7 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return redirect()->route('admin.user.index')
+        return redirect()->route('admin.users.index')
             ->with('success', 'User deleted successfully.');
     }
 }

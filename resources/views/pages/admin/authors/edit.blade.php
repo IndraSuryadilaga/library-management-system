@@ -22,30 +22,11 @@
             <form action="{{ route('admin.authors.update', $author) }}" method="POST">
                 @csrf
                 @method('PUT')
-
-                @php
-                    $authorFields = [
-                        [
-                            'name' => 'name',
-                            'label' => 'Nama',
-                            'value' => old('name', $author->name),
-                            'required' => true,
-                            'fullWidth' => true
-                        ],
-                        [
-                            'name' => 'bio',
-                            'label' => 'Biografi',
-                            'type' => 'textarea',
-                            'rows' => 6,
-                            'value' => old('bio', $author->bio),
-                            'helper' => 'Berikan biografi singkat tentang penulis.',
-                            'fullWidth' => true
-                        ]
-                    ];
-                @endphp
-
-                {{-- Panggil Dynamic Form Organism --}}
-                <x-organisms.dynamic-form :fields="$authorFields" />
+                <x-organisms.dynamic-form
+                    :fields="$authorFields"
+                    :cancelUrl="route('admin.authors.index')"
+                    submitLabel="Perbarui Penulis"
+                />
             </form>
         </div>
     </div>

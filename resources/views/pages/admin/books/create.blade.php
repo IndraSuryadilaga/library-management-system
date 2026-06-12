@@ -29,58 +29,11 @@
             <form action="{{ route('admin.books.store') }}" method="POST">
                 @csrf
 
-                @php
-                    // Konfigurasi Field untuk Form Tambah Buku
-                    $bookFields = [
-                        [
-                            'name' => 'title',
-                            'label' => 'Judul Buku',
-                            'value' => old('title'),
-                            'required' => true,
-                            'fullWidth' => true
-                        ],
-                        [
-                            'name' => 'author_id',
-                            'label' => 'Penulis',
-                            'type' => 'select',
-                            'options' => $authors->pluck('name', 'id')->toArray(),
-                            'value' => old('author_id'),
-                            'required' => true
-                        ],
-                        [
-                            'name' => 'publisher_id',
-                            'label' => 'Penerbit',
-                            'type' => 'select',
-                            'options' => $publishers->pluck('name', 'id')->toArray(),
-                            'value' => old('publisher_id'),
-                            'required' => true
-                        ],
-                        [
-                            'name' => 'publication_year',
-                            'label' => 'Tahun Terbit',
-                            'type' => 'number',
-                            'value' => old('publication_year'),
-                            'required' => true
-                        ],
-                        [
-                            'name' => 'isbn',
-                            'label' => 'ISBN',
-                            'value' => old('isbn')
-                        ],
-                        [
-                            'name' => 'genres',
-                            'label' => 'Genre',
-                            'type' => 'select',
-                            'multiple' => true,
-                            'options' => $genres->pluck('name', 'id')->toArray(),
-                            'value' => old('genres', []),
-                            'fullWidth' => true
-                        ],
-                    ];
-                @endphp
-
-                {{-- Panggil Dynamic Form Organism --}}
-                <x-organisms.dynamic-form :fields="$bookFields" />
+                <x-organisms.dynamic-form
+                    :fields="$bookFields"
+                    :cancelUrl="route('admin.books.index')"
+                    submitLabel="Simpan Buku"
+                />
             </form>
         </div>
     </div>

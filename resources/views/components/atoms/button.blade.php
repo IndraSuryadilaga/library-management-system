@@ -10,7 +10,7 @@
     $isDisabled = $attributes->get('disabled') !== null && $attributes->get('disabled') !== false;
 
     // Base classes from the design system, applied to all variants
-    $baseClasses = 'inline-flex items-center justify-center gap-2 font-body text-sm rounded-btn transition-colors duration-150';
+    $baseClasses = 'inline-flex items-center justify-center text-sm gap-2 font-body rounded-btn transition-colors duration-150';
 
     // Variant-specific classes from DESIGN.md.
     $styles = [

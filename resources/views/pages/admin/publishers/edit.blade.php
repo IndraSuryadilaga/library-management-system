@@ -22,40 +22,11 @@
             <form action="{{ route('admin.publishers.update', $publisher) }}" method="POST">
                 @csrf
                 @method('PUT')
-
-                @php
-                    $publisherFields = [
-                        [
-                            'name' => 'name',
-                            'label' => 'Nama Penerbit',
-                            'value' => old('name', $publisher->name),
-                            'required' => true,
-                            'fullWidth' => true
-                        ],
-                        [
-                            'name' => 'email',
-                            'label' => 'Email',
-                            'type' => 'email',
-                            'value' => old('email', $publisher->email)
-                        ],
-                        [
-                            'name' => 'phone',
-                            'label' => 'Telepon',
-                            'type' => 'tel',
-                            'value' => old('phone', $publisher->phone)
-                        ],
-                        [
-                            'name' => 'address',
-                            'label' => 'Alamat',
-                            'type' => 'textarea',
-                            'rows' => 4,
-                            'value' => old('address', $publisher->address),
-                            'fullWidth' => true
-                        ]
-                    ];
-                @endphp
-
-                <x-organisms.dynamic-form :fields="$publisherFields" />
+                <x-organisms.dynamic-form
+                    :fields="$publisherFields"
+                    :cancelUrl="route('admin.publishers.index')"
+                    submitLabel="Perbarui Penerbit"
+                />
             </form>
         </div>
     </div>

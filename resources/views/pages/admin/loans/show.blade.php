@@ -14,19 +14,6 @@
         </x-atoms.button>
     </div>
 
-    @php
-        $loanDetails = [
-            ['label' => 'ID Peminjaman', 'value' => $loan->id, 'isMono' => true],
-            ['label' => 'Pengguna', 'value' => $loan->user->name],
-            ['label' => 'Item', 'value' => $loan->item->book->title . ' (' . $loan->item->barcode . ')'],
-            ['label' => 'Tanggal Pinjam', 'value' => $loan->loan_date],
-            ['label' => 'Jatuh Tempo', 'value' => $loan->due_date],
-            ['label' => 'Tanggal Kembali', 'value' => $loan->return_date ?? '-'],
-            ['label' => 'Dibuat pada', 'value' => $loan->created_at->format('d F Y')],
-            ['label' => 'Diperbarui pada', 'value' => $loan->updated_at->format('d F Y')],
-        ];
-    @endphp
-
     <x-organisms.show-card :items="$loanDetails">
         <x-slot:actions>
             <x-atoms.button variant="primary" href="{{ route('admin.loans.edit', $loan) }}">

@@ -14,20 +14,6 @@
         </x-atoms.button>
     </div>
 
-    @php
-        $authorDetails = [
-            ['label' => 'ID Penulis', 'value' => $author->id, 'isMono' => true],
-            ['label' => 'Jumlah Buku', 'value' => 0, 'isMono' => true], // Placeholder
-            ['label' => 'Dibuat pada', 'value' => $author->created_at->format('d F Y')],
-            ['label' => 'Diperbarui pada', 'value' => $author->updated_at->format('d F Y')],
-            [
-                'label' => 'Biografi',
-                'fullWidth' => true,
-                'slot' => $author->bio ? \Illuminate\Support\Str::markdown($author->bio) : '<p class="text-dusty italic">Biografi tidak tersedia.</p>'
-            ],
-        ];
-    @endphp
-
     <x-organisms.show-card :items="$authorDetails">
         <x-slot:actions>
             <x-atoms.button variant="primary" href="{{ route('admin.authors.edit', $author) }}">

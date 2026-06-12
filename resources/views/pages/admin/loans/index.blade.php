@@ -14,6 +14,14 @@
         </x-atoms.button>
     </div>
 
+    <x-organisms.filter-form
+        :action="route('admin.loans.index')"
+        :resetUrl="route('admin.loans.index')"
+        searchLabel="Cari Peminjaman" {{-- No direct search field, but keeping it for consistency --}}
+        :searchValue="request('search')"
+        :filters="$loanFilters"
+    />
+
     @if (session('success'))
         <div class="bg-sage-200/50 border border-sage-200 text-sage-600 px-4 py-3 rounded-card relative mb-bento-gap" role="alert">
             <strong class="font-bold">Success!</strong>
@@ -25,10 +33,10 @@
         @forelse ($loans as $loan)
             <tr class="border-b border-cream-200 hover:bg-cream-100/70 transition-colors duration-150">
                 <td class="px-6 py-4 font-mono text-bark-400">{{ $loan->id }}</td>
-                <td class="px-6 py-4 font-medium text-bark-600">{{ $loan->user->name }}</td>
-                <td class="px-6 py-4 font-medium text-bark-600">{{ $loan->item->book->title }} ({{ $loan->item->barcode }})</td>
+                <td class="px-6 py-4 font-medium text-bark-600/80">{{ $loan->user->name }}</td>
+                <td class="px-6 py-4 font-medium text-bark-600/80">{{ $loan->item->book->title }} ({{ $loan->item->barcode }})</td>
                 <td class="px-6 py-4 font-body text-dusty">{{ $loan->loan_date }}</td>
-                <td class="px-6 py-4 font-body text-dusty">{{ $loan->due_date }}</td>
+                <td class="px-6 py-4 font-body text-bark-600/80">{{ $loan->due_date }}</td>
                 <td class="px-6 py-4 font-body text-dusty">{{ $loan->return_date ?? '-' }}</td>
                 <td class="px-6 py-4 text-center">
                     <div class="flex items-center justify-center space-x-3">

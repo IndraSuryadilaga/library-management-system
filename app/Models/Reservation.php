@@ -40,4 +40,31 @@ class Reservation extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    public function scopeFilter($query, array $filters): void
+    {
+        // User filter
+        $query->when($filters['user_id'] ?? false, function ($query, $userId) {
+            $query->where('user_id', $userId);
+        });
+
+        // Book filter
+        $query->when($filters['book_id'] ?? false, function ($query, $bookId) {
+            $query->where('book_id', $bookId);
+        });
+
+        // Status filter
+        $query->when($filters['status'] ?? false, function ($query, $status) {
+            $query->where('status', $status);
+        });
+
+        // Date range filter for reservation_date
+        $query->when($filters['start_date'] ?? false, function ($query, $startDate) {
+            $query->whereDate('reservation_date', '>=', $startDate);
+        });
+
+        $query->when($filters['end_date'] ?? false, function ($query, $endDate) {
+            $query->whereDate('reservation_date', '<=', $endDate);
+        });
+    }
 }

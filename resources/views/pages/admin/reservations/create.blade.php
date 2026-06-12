@@ -28,55 +28,11 @@
     <div class="bg-parchment border border-cream-200 rounded-card-lg p-6 paper-grain">
         <form action="{{ route('admin.reservations.store') }}" method="POST">
             @csrf
-            @php
-                $reservationFields = [
-                    [
-                        'name' => 'user_id',
-                        'label' => 'Pengguna',
-                        'type' => 'select',
-                        'options' => $users->pluck('name', 'id')->toArray(),
-                        'value' => old('user_id'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'book_id',
-                        'label' => 'Buku',
-                        'type' => 'select',
-                        'options' => $books->pluck('title', 'id')->toArray(),
-                        'value' => old('book_id'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'item_id',
-                        'label' => 'Item (Opsional)',
-                        'type' => 'select',
-                        'options' => $items->pluck('barcode', 'id')->toArray(),
-                        'value' => old('item_id'),
-                    ],
-                    [
-                        'name' => 'reservation_date',
-                        'label' => 'Tanggal Reservasi',
-                        'type' => 'date',
-                        'value' => old('reservation_date'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'status',
-                        'label' => 'Status',
-                        'type' => 'select',
-                        'options' => [
-                            'pending' => 'Pending',
-                            'ready_for_pickup' => 'Ready for Pickup',
-                            'cancelled' => 'Cancelled',
-                            'fulfilled' => 'Fulfilled',
-                        ],
-                        'value' => old('status'),
-                        'required' => true
-                    ],
-                ];
-            @endphp
-
-            <x-organisms.dynamic-form :fields="$reservationFields" />
+            <x-organisms.dynamic-form
+                :fields="$reservationFields"
+                :cancelUrl="route('admin.reservations.index')"
+                submitLabel="Simpan Reservasi"
+            />
         </form>
     </div>
 </div>

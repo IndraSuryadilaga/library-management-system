@@ -22,20 +22,11 @@
             <form action="{{ route('admin.genres.update', $genre) }}" method="POST">
                 @csrf
                 @method('PUT')
-
-                @php
-                    $genreFields = [
-                        [
-                            'name' => 'name',
-                            'label' => 'Nama Genre',
-                            'value' => old('name', $genre->name),
-                            'required' => true,
-                            'fullWidth' => true
-                        ]
-                    ];
-                @endphp
-
-                <x-organisms.dynamic-form :fields="$genreFields" />
+                <x-organisms.dynamic-form
+                    :fields="$genreFields"
+                    :cancelUrl="route('admin.genres.index')"
+                    submitLabel="Perbarui Genre"
+                />
             </form>
         </div>
     </div>

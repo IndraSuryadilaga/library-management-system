@@ -14,10 +14,44 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::with(['author', 'publisher'])->latest()->paginate(10);
-        return view('pages.admin.books.index', compact('books'));
+        $books = Book::with(['author', 'publisher', 'genres'])
+            ->filter($request->only(['search', 'author_id', 'publisher_id', 'genre_id']))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        $authors = Author::pluck('name', 'id');
+        $publishers = Publisher::pluck('name', 'id');
+        $genres = Genre::pluck('name', 'id');
+
+        // Definisikan konfigurasi filter di sini
+        $bookFilters = [
+            [
+                'name' => 'author_id',
+                'label' => 'Penulis',
+                'placeholder' => 'Semua Penulis',
+                'options' => $authors,
+                'value' => $request->query('author_id')
+            ],
+            [
+                'name' => 'publisher_id',
+                'label' => 'Penerbit',
+                'placeholder' => 'Semua Penerbit',
+                'options' => $publishers,
+                'value' => $request->query('publisher_id')
+            ],
+            [
+                'name' => 'genre_id',
+                'label' => 'Genre',
+                'placeholder' => 'Semua Genre',
+                'options' => $genres,
+                'value' => $request->query('genre_id')
+            ]
+        ];
+
+        return view('pages.admin.books.index', compact('books', 'bookFilters'));
     }
 
     /**
@@ -25,10 +59,39 @@ class BookController extends Controller
      */
     public function create()
     {
-        $authors = Author::all();
-        $publishers = Publisher::all();
-        $genres = Genre::all();
-        return view('pages.admin.books.create', compact('authors', 'publishers', 'genres'));
+        // Langsung konversi ke Array Key-Value di Controller
+        $authors = Author::pluck('name', 'id')->toArray();
+        $publishers = Publisher::pluck('name', 'id')->toArray();
+        $genres = Genre::pluck('name', 'id')->toArray();
+
+        $bookFields = [
+            [
+                'name' => 'title', 'label' => 'Judul Buku', 'value' => old('title'),
+                'required' => true, 'fullWidth' => true
+            ],
+            [
+                'name' => 'author_id', 'label' => 'Penulis', 'type' => 'select',
+                'options' => $authors, 'value' => old('author_id'), 'required' => true
+            ],
+            [
+                'name' => 'publisher_id', 'label' => 'Penerbit', 'type' => 'select',
+                'options' => $publishers, 'value' => old('publisher_id'), 'required' => true
+            ],
+            [
+                'name' => 'publication_year', 'label' => 'Tahun Terbit', 'type' => 'number',
+                'value' => old('publication_year'), 'required' => true
+            ],
+            [
+                'name' => 'isbn', 'label' => 'ISBN', 'value' => old('isbn')
+            ],
+            [
+                'name' => 'genres', 'label' => 'Genre', 'type' => 'select', 'multiple' => true,
+                'options' => $genres, 'value' => old('genres', []), 'fullWidth' => true
+            ],
+        ];
+
+        // Hanya passing bookFields
+        return view('pages.admin.books.create', compact('bookFields'));
     }
 
     /**
@@ -61,7 +124,24 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        return view('pages.admin.books.show', compact('book'));
+        $bookDetails = [
+            ['label' => 'ID Buku', 'value' => $book->id, 'isMono' => true],
+            ['label' => 'Judul', 'value' => $book->title],
+            ['label' => 'Penulis', 'value' => $book->author->name],
+            ['label' => 'Penerbit', 'value' => $book->publisher->name],
+            ['label' => 'Tahun Terbit', 'value' => $book->publication_year],
+            ['label' => 'ISBN', 'value' => $book->isbn ?? '-', 'isMono' => true],
+            [
+                'label' => 'Genre',
+                'fullWidth' => true,
+                // Menggunakan pluck()->implode() jauh lebih bersih daripada map()
+                'slot' => $book->genres->pluck('name')->implode(', ')
+            ],
+            ['label' => 'Dibuat pada', 'value' => $book->created_at->format('d F Y')],
+            ['label' => 'Diperbarui pada', 'value' => $book->updated_at->format('d F Y')],
+        ];
+
+        return view('pages.admin.books.show', compact('book', 'bookDetails'));
     }
 
     /**
@@ -69,10 +149,38 @@ class BookController extends Controller
      */
     public function edit(Book $book)
     {
-        $authors = Author::all();
-        $publishers = Publisher::all();
-        $genres = Genre::all();
-        return view('pages.admin.books.edit', compact('book', 'authors', 'publishers', 'genres'));
+        $authors = Author::pluck('name', 'id')->toArray();
+        $publishers = Publisher::pluck('name', 'id')->toArray();
+        $genres = Genre::pluck('name', 'id')->toArray();
+
+        $bookFields = [
+            [
+                'name' => 'title', 'label' => 'Judul Buku', 'value' => old('title', $book->title),
+                'required' => true, 'fullWidth' => true
+            ],
+            [
+                'name' => 'author_id', 'label' => 'Penulis', 'type' => 'select',
+                'options' => $authors, 'value' => old('author_id', $book->author_id), 'required' => true
+            ],
+            [
+                'name' => 'publisher_id', 'label' => 'Penerbit', 'type' => 'select',
+                'options' => $publishers, 'value' => old('publisher_id', $book->publisher_id), 'required' => true
+            ],
+            [
+                'name' => 'publication_year', 'label' => 'Tahun Terbit', 'type' => 'number',
+                'value' => old('publication_year', $book->publication_year), 'required' => true
+            ],
+            [
+                'name' => 'isbn', 'label' => 'ISBN', 'value' => old('isbn', $book->isbn)
+            ],
+            [
+                'name' => 'genres', 'label' => 'Genre', 'type' => 'select', 'multiple' => true,
+                'options' => $genres, 'value' => old('genres', $book->genres->pluck('id')->toArray() ?? []),
+                'fullWidth' => true
+            ],
+        ];
+
+        return view('pages.admin.books.edit', compact('book', 'bookFields'));
     }
 
     /**

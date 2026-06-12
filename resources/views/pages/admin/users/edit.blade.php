@@ -29,24 +29,11 @@
         <form action="{{ route('admin.users.update', $user) }}" method="POST">
             @csrf
             @method('PUT')
-            @php
-                $userFields = [
-                    ['name' => 'name', 'label' => 'Nama', 'value' => old('name', $user->name), 'required' => true],
-                    ['name' => 'email', 'label' => 'Email', 'type' => 'email', 'value' => old('email', $user->email), 'required' => true],
-                    ['name' => 'password', 'label' => 'Password Baru (Opsional)', 'type' => 'password'],
-                    ['name' => 'password_confirmation', 'label' => 'Konfirmasi Password Baru', 'type' => 'password'],
-                    [
-                        'name' => 'role',
-                        'label' => 'Role',
-                        'type' => 'select',
-                        'options' => ['admin' => 'Admin', 'user' => 'User'],
-                        'value' => old('role', $user->role),
-                        'required' => true
-                    ],
-                ];
-            @endphp
-
-            <x-organisms.dynamic-form :fields="$userFields" />
+            <x-organisms.dynamic-form
+                :fields="$userFields"
+                :cancelUrl="route('admin.users.index')"
+                submitLabel="Perbarui Pengguna"
+            />
         </form>
     </div>
 </div>

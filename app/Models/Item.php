@@ -40,4 +40,23 @@ class Item extends Model
     {
         return $this->hasMany(Loan::class);
     }
+
+    public function scopeFilter($query, array $filters): void
+    {
+        // Search filter by barcode
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            $searchTerm = '%' . trim($search) . '%';
+            $query->whereRaw('LOWER(barcode) LIKE LOWER(?)', [$searchTerm]);
+        });
+
+        // Book filter
+        $query->when($filters['book_id'] ?? false, function ($query, $bookId) {
+            $query->where('book_id', $bookId);
+        });
+
+        // Status filter
+        $query->when($filters['status'] ?? false, function ($query, $status) {
+            $query->where('status', $status);
+        });
+    }
 }

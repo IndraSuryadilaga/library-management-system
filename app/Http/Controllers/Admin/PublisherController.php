@@ -11,10 +11,29 @@ class PublisherController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $publishers = Publisher::latest()->paginate(10);
-        return view('pages.admin.publishers.index', compact('publishers'));
+        $publishers = Publisher::filter($request->only(['search', 'start_date', 'end_date']))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        $publisherFilters = [
+            [
+                'name' => 'start_date',
+                'label' => 'Dari Tanggal',
+                'type' => 'date',
+                'value' => request('start_date')
+            ],
+            [
+                'name' => 'end_date',
+                'label' => 'Sampai Tanggal',
+                'type' => 'date',
+                'value' => request('end_date')
+            ]
+        ];
+
+        return view('pages.admin.publishers.index', compact('publishers', 'publisherFilters'));
     }
 
     /**
@@ -22,7 +41,14 @@ class PublisherController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.publishers.create');
+        $publisherFields = [
+            ['name' => 'name', 'label' => 'Nama Penerbit', 'value' => old('name'), 'required' => true, 'fullWidth' => true],
+            ['name' => 'email', 'label' => 'Email', 'type' => 'email', 'value' => old('email')],
+            ['name' => 'phone', 'label' => 'Telepon', 'type' => 'tel', 'value' => old('phone')],
+            ['name' => 'address', 'label' => 'Alamat', 'type' => 'textarea', 'value' => old('address'), 'fullWidth' => true],
+        ];
+
+        return view('pages.admin.publishers.create', compact('publisherFields'));
     }
 
     /**
@@ -39,7 +65,7 @@ class PublisherController extends Controller
 
         Publisher::create($request->all());
 
-        return redirect()->route('admin.publisher.index')
+        return redirect()->route('admin.publishers.index')
             ->with('success', 'Publisher created successfully.');
     }
 
@@ -48,7 +74,18 @@ class PublisherController extends Controller
      */
     public function show(Publisher $publisher)
     {
-        return view('pages.admin.publishers.show', compact('publisher'));
+        $publisherDetails = [
+            ['label' => 'ID Penerbit', 'value' => $publisher->id, 'isMono' => true],
+            ['label' => 'Nama Penerbit', 'value' => $publisher->name],
+            ['label' => 'Email', 'value' => $publisher->email ?? '-'],
+            ['label' => 'Telepon', 'value' => $publisher->phone ?? '-'],
+            ['label' => 'Alamat', 'value' => $publisher->address ?? '-', 'fullWidth' => true],
+            ['label' => 'Jumlah Buku', 'value' => $publisher->books()->count(), 'isMono' => true],
+            ['label' => 'Dibuat pada', 'value' => $publisher->created_at->format('d F Y')],
+            ['label' => 'Diperbarui pada', 'value' => $publisher->updated_at->format('d F Y')],
+        ];
+
+        return view('pages.admin.publishers.show', compact('publisher', 'publisherDetails'));
     }
 
     /**
@@ -56,7 +93,14 @@ class PublisherController extends Controller
      */
     public function edit(Publisher $publisher)
     {
-        return view('pages.admin.publishers.edit', compact('publisher'));
+        $publisherFields = [
+            ['name' => 'name', 'label' => 'Nama Penerbit', 'value' => old('name', $publisher->name), 'required' => true, 'fullWidth' => true],
+            ['name' => 'email', 'label' => 'Email', 'type' => 'email', 'value' => old('email', $publisher->email)],
+            ['name' => 'phone', 'label' => 'Telepon', 'type' => 'tel', 'value' => old('phone', $publisher->phone)],
+            ['name' => 'address', 'label' => 'Alamat', 'type' => 'textarea', 'value' => old('address', $publisher->address), 'fullWidth' => true],
+        ];
+
+        return view('pages.admin.publishers.edit', compact('publisher', 'publisherFields'));
     }
 
     /**

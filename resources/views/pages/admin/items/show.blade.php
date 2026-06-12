@@ -14,17 +14,6 @@
         </x-atoms.button>
     </div>
 
-    @php
-        $itemDetails = [
-            ['label' => 'ID Item', 'value' => $item->id, 'isMono' => true],
-            ['label' => 'Barcode', 'value' => $item->barcode, 'isMono' => true],
-            ['label' => 'Judul Buku', 'value' => $item->book->title],
-            ['label' => 'Status', 'value' => $item->status],
-            ['label' => 'Dibuat pada', 'value' => $item->created_at->format('d F Y')],
-            ['label' => 'Diperbarui pada', 'value' => $item->updated_at->format('d F Y')],
-        ];
-    @endphp
-
     <x-organisms.show-card :items="$itemDetails">
         <x-slot:actions>
             <x-atoms.button variant="primary" href="{{ route('admin.items.edit', $item) }}">

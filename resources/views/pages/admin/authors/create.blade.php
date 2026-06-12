@@ -21,30 +21,11 @@
         <div class="bg-parchment border border-cream-200 rounded-card-lg p-6 paper-grain">
             <form action="{{ route('admin.authors.store') }}" method="POST">
                 @csrf
-
-                @php
-                    $authorFields = [
-                        [
-                            'name' => 'name',
-                            'label' => 'Nama',
-                            'value' => old('name'),
-                            'required' => true,
-                            'fullWidth' => true
-                        ],
-                        [
-                            'name' => 'bio',
-                            'label' => 'Biografi',
-                            'type' => 'textarea',
-                            'rows' => 6,
-                            'value' => old('bio'),
-                            'helper' => 'Berikan biografi singkat tentang penulis.',
-                            'fullWidth' => true
-                        ]
-                    ];
-                @endphp
-
-                {{-- Panggil Dynamic Form Organism --}}
-                <x-organisms.dynamic-form :fields="$authorFields" />
+                <x-organisms.dynamic-form
+                    :fields="$authorFields"
+                    :cancelUrl="route('admin.authors.index')"
+                    submitLabel="Simpan Penulis"
+                />
             </form>
         </div>
     </div>

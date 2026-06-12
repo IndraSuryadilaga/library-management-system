@@ -11,10 +11,29 @@ class AuthorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $authors = Author::latest()->paginate(10);
-        return view('pages.admin.authors.index', compact('authors'));
+        $authors = Author::filter($request->only(['search', 'start_date', 'end_date']))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        $authorFilters = [
+            [
+                'name' => 'start_date',
+                'label' => 'Dari Tanggal',
+                'type' => 'date',
+                'value' => request('start_date')
+            ],
+            [
+                'name' => 'end_date',
+                'label' => 'Sampai Tanggal',
+                'type' => 'date',
+                'value' => request('end_date')
+            ]
+        ];
+
+        return view('pages.admin.authors.index', compact('authors', 'authorFilters'));
     }
 
     /**
@@ -22,7 +41,26 @@ class AuthorController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.authors.create');
+        $authorFields = [
+            [
+                'name' => 'name',
+                'label' => 'Nama',
+                'value' => old('name'),
+                'required' => true,
+                'fullWidth' => true
+            ],
+            [
+                'name' => 'bio',
+                'label' => 'Biografi',
+                'type' => 'textarea',
+                'rows' => 6,
+                'value' => old('bio'),
+                'helper' => 'Berikan biografi singkat tentang penulis.',
+                'fullWidth' => true
+            ]
+        ];
+
+        return view('pages.admin.authors.create', compact('authorFields'));
     }
 
     /**
@@ -46,7 +84,19 @@ class AuthorController extends Controller
      */
     public function show(Author $author)
     {
-        return view('pages.admin.authors.show', compact('author'));
+        $authorDetails = [
+            ['label' => 'ID Penulis', 'value' => $author->id, 'isMono' => true],
+            ['label' => 'Jumlah Buku', 'value' => $author->books()->count(), 'isMono' => true],
+            ['label' => 'Dibuat pada', 'value' => $author->created_at->format('d F Y')],
+            ['label' => 'Diperbarui pada', 'value' => $author->updated_at->format('d F Y')],
+            [
+                'label' => 'Biografi',
+                'fullWidth' => true,
+                'slot' => $author->bio ? \Illuminate\Support\Str::markdown($author->bio) : '<p class="text-dusty italic">Biografi tidak tersedia.</p>'
+            ],
+        ];
+
+        return view('pages.admin.authors.show', compact('author', 'authorDetails'));
     }
 
     /**
@@ -54,7 +104,26 @@ class AuthorController extends Controller
      */
     public function edit(Author $author)
     {
-        return view('pages.admin.authors.edit', compact('author'));
+        $authorFields = [
+            [
+                'name' => 'name',
+                'label' => 'Nama',
+                'value' => old('name', $author->name),
+                'required' => true,
+                'fullWidth' => true
+            ],
+            [
+                'name' => 'bio',
+                'label' => 'Biografi',
+                'type' => 'textarea',
+                'rows' => 6,
+                'value' => old('bio', $author->bio),
+                'helper' => 'Berikan biografi singkat tentang penulis.',
+                'fullWidth' => true
+            ]
+        ];
+
+        return view('pages.admin.authors.edit', compact('author', 'authorFields'));
     }
 
     /**

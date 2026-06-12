@@ -14,6 +14,14 @@
         </x-atoms.button>
     </div>
 
+    <x-organisms.filter-form
+        :action="route('admin.items.index')"
+        :resetUrl="route('admin.items.index')"
+        searchLabel="Cari Barcode"
+        :searchValue="request('search')"
+        :filters="$itemFilters"
+    />
+
     @if (session('success'))
         <div class="bg-sage-200/50 border border-sage-200 text-sage-600 px-4 py-3 rounded-card relative mb-bento-gap" role="alert">
             <strong class="font-bold">Success!</strong>
@@ -25,8 +33,8 @@
         @forelse ($items as $item)
             <tr class="border-b border-cream-200 hover:bg-cream-100/70 transition-colors duration-150">
                 <td class="px-6 py-4 font-mono text-bark-400">{{ $item->id }}</td>
-                <td class="px-6 py-4 font-mono text-bark-400">{{ $item->barcode }}</td>
-                <td class="px-6 py-4 font-medium text-bark-600">{{ $item->book->title }}</td>
+                <td class="px-6 py-4 font-mono text-bark-600/80">{{ $item->barcode }}</td>
+                <td class="px-6 py-4 font-medium text-bark-600/80">{{ $item->book->title }}</td>
                 <td class="px-6 py-4 font-body text-dusty">{{ $item->status }}</td>
                 <td class="px-6 py-4 text-center">
                     <div class="flex items-center justify-center space-x-3">

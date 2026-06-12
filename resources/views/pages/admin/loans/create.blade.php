@@ -28,49 +28,11 @@
     <div class="bg-parchment border border-cream-200 rounded-card-lg p-6 paper-grain">
         <form action="{{ route('admin.loans.store') }}" method="POST">
             @csrf
-            @php
-                $loanFields = [
-                    [
-                        'name' => 'user_id',
-                        'label' => 'Pengguna',
-                        'type' => 'select',
-                        'options' => $users->pluck('name', 'id')->toArray(),
-                        'value' => old('user_id'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'item_id',
-                        'label' => 'Item',
-                        'type' => 'select',
-                        'options' => $items->pluck('barcode', 'id')->toArray(),
-                        'value' => old('item_id'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'loan_date',
-                        'label' => 'Tanggal Pinjam',
-                        'type' => 'date',
-                        'value' => old('loan_date'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'due_date',
-                        'label' => 'Jatuh Tempo',
-                        'type' => 'date',
-                        'value' => old('due_date'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'return_date',
-                        'label' => 'Tanggal Kembali (Opsional)',
-                        'type' => 'date',
-                        'value' => old('return_date'),
-                    ],
-                ];
-            @endphp
-
-            <x-organisms.dynamic-form :fields="$loanFields" />
-
+            <x-organisms.dynamic-form
+                :fields="$loanFields"
+                :cancelUrl="route('admin.loans.index')"
+                submitLabel="Simpan Peminjaman"
+            />
         </form>
     </div>
 </div>

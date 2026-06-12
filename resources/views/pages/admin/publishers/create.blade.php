@@ -21,41 +21,11 @@
         <div class="bg-parchment border border-cream-200 rounded-card-lg p-6 paper-grain">
             <form action="{{ route('admin.publishers.store') }}" method="POST">
                 @csrf
-
-                @php
-                    $publisherFields = [
-                        [
-                            'name' => 'name',
-                            'label' => 'Nama Penerbit',
-                            'value' => old('name'),
-                            'required' => true,
-                            'fullWidth' => true
-                        ],
-                        [
-                            'name' => 'email',
-                            'label' => 'Email',
-                            'type' => 'email',
-                            'value' => old('email')
-                        ],
-                        [
-                            'name' => 'phone',
-                            'label' => 'Telepon',
-                            'type' => 'tel',
-                            'value' => old('phone')
-                        ],
-                        [
-                            'name' => 'address',
-                            'label' => 'Alamat',
-                            'type' => 'textarea',
-                            'rows' => 4,
-                            'value' => old('address'),
-                            'fullWidth' => true
-                        ]
-                    ];
-                @endphp
-
-                <x-organisms.dynamic-form :fields="$publisherFields" />
-
+                <x-organisms.dynamic-form
+                    :fields="$publisherFields"
+                    :cancelUrl="route('admin.publishers.index')"
+                    submitLabel="Simpan Penerbit"
+                />
             </form>
         </div>
     </div>

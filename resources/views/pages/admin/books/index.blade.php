@@ -14,6 +14,14 @@
         </x-atoms.button>
     </div>
 
+    <x-organisms.filter-form
+        :action="route('admin.books.index')"
+        :resetUrl="route('admin.books.index')"
+        searchLabel="Cari Judul/ISBN"
+        :searchValue="request('search')"
+        :filters="$bookFilters"
+    />
+
     @if (session('success'))
         <div class="bg-sage-200/50 border border-sage-200 text-sage-600 px-4 py-3 rounded-card relative mb-bento-gap" role="alert">
             <strong class="font-bold">Success!</strong>
@@ -21,13 +29,14 @@
         </div>
     @endif
 
-    <x-molecules.table :headers="['ID', 'Judul', 'Penulis', 'Penerbit', 'Tahun', 'Aksi']">
+    <x-molecules.table :headers="['ID', 'Judul', 'Penulis', 'Penerbit', 'ISBN', 'Tahun', 'Aksi']">
         @forelse ($books as $book)
             <tr class="border-b border-cream-200 hover:bg-cream-100/70 transition-colors duration-150">
                 <td class="px-6 py-4 font-mono text-bark-400">{{ $book->id }}</td>
                 <td class="px-6 py-4 font-medium text-bark-600">{{ $book->title }}</td>
                 <td class="px-6 py-4 font-body text-dusty">{{ $book->author->name }}</td>
                 <td class="px-6 py-4 font-body text-dusty">{{ $book->publisher->name }}</td>
+                <td class="px-6 py-4 font-body text-dusty">{{ $book->isbn }}</td>
                 <td class="px-6 py-4 font-body text-dusty">{{ $book->publication_year }}</td>
                 <td class="px-6 py-4 text-center">
                     <div class="flex items-center justify-center space-x-3">

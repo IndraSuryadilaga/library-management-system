@@ -28,48 +28,11 @@
     <div class="bg-parchment border border-cream-200 rounded-card-lg p-6 paper-grain">
         <form action="{{ route('admin.fines.store') }}" method="POST">
             @csrf
-            @php
-                $fineFields = [
-                    [
-                        'name' => 'user_id',
-                        'label' => 'Pengguna',
-                        'type' => 'select',
-                        'options' => $users->pluck('name', 'id')->toArray(),
-                        'value' => old('user_id'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'loan_id',
-                        'label' => 'Peminjaman',
-                        'type' => 'select',
-                        'options' => $loans->pluck('id', 'id')->toArray(),
-                        'value' => old('loan_id'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'amount',
-                        'label' => 'Jumlah',
-                        'type' => 'number',
-                        'value' => old('amount'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'reason',
-                        'label' => 'Alasan',
-                        'type' => 'textarea',
-                        'value' => old('reason'),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'paid_at',
-                        'label' => 'Dibayar Pada (Opsional)',
-                        'type' => 'date',
-                        'value' => old('paid_at'),
-                    ],
-                ];
-            @endphp
-
-            <x-organisms.dynamic-form :fields="$fineFields" />
+            <x-organisms.dynamic-form
+                :fields="$fineFields"
+                :cancelUrl="route('admin.fines.index')"
+                submitLabel="Simpan Denda"
+            />
         </form>
     </div>
 </div>

@@ -29,48 +29,11 @@
         <form action="{{ route('admin.fines.update', $fine) }}" method="POST">
             @csrf
             @method('PUT')
-            @php
-                $fineFields = [
-                    [
-                        'name' => 'user_id',
-                        'label' => 'Pengguna',
-                        'type' => 'select',
-                        'options' => $users->pluck('name', 'id')->toArray(),
-                        'value' => old('user_id', $fine->user_id),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'loan_id',
-                        'label' => 'Peminjaman',
-                        'type' => 'select',
-                        'options' => $loans->pluck('id', 'id')->toArray(),
-                        'value' => old('loan_id', $fine->loan_id),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'amount',
-                        'label' => 'Jumlah',
-                        'type' => 'number',
-                        'value' => old('amount', $fine->amount),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'reason',
-                        'label' => 'Alasan',
-                        'type' => 'textarea',
-                        'value' => old('reason', $fine->reason),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'paid_at',
-                        'label' => 'Dibayar Pada (Opsional)',
-                        'type' => 'date',
-                        'value' => old('paid_at', $fine->paid_at?->format('Y-m-d')),
-                    ],
-                ];
-            @endphp
-
-            <x-organisms.dynamic-form :fields="$fineFields" />
+            <x-organisms.dynamic-form
+                :fields="$fineFields"
+                :cancelUrl="route('admin.fines.index')"
+                submitLabel="Perbarui Denda"
+            />
         </form>
     </div>
 </div>

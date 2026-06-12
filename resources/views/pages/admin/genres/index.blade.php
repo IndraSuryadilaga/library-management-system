@@ -7,12 +7,20 @@
     <div class="flex justify-between items-center mb-bento-gap">
         <div>
             <h1 class="font-display text-3xl font-semibold text-bark-500">Daftar Genre</h1>
-            <p class="font-body text-base text-dusty mt-1">Kelola semua genre buku di perpustakaan.</p>
+            <p class="font-body text-base text-dusty mt-1">Kelola semua data genre buku di perpustakaan.</p>
         </div>
         <x-atoms.button variant="primary" href="{{ route('admin.genres.create') }}">
             + Tambah Genre
         </x-atoms.button>
     </div>
+
+    <x-organisms.filter-form
+        :action="route('admin.genres.index')"
+        :resetUrl="route('admin.genres.index')"
+        searchLabel="Cari Nama"
+        :searchValue="request('search')"
+        :filters="$genreFilters"
+    />
 
     @if (session('success'))
         <div class="bg-sage-200/50 border border-sage-200 text-sage-600 px-4 py-3 rounded-card relative mb-bento-gap" role="alert">
@@ -24,9 +32,9 @@
     <x-molecules.table :headers="['ID', 'Nama', 'Tanggal Dibuat', 'Aksi']">
         @forelse ($genres as $genre)
             <tr class="border-b border-cream-200 hover:bg-cream-100/70 transition-colors duration-150">
-                <td class="px-6 py-4 font-mono text-bark-600/80">{{ $genre->id }}</td>
+                <td class="px-6 py-4 font-mono text-bark-400">{{ $genre->id }}</td>
                 <td class="px-6 py-4 font-medium text-bark-600/80">{{ $genre->name }}</td>
-                <td class="px-6 py-4 font-body text-bark-600/80">{{ $genre->created_at->format('d M Y') }}</td>
+                <td class="px-6 py-4 font-body text-dusty">{{ $genre->created_at->format('d M Y') }}</td>
                 <td class="px-6 py-4 text-center">
                     <div class="flex items-center justify-center space-x-3">
                         <x-atoms.button variant="tertiary" href="{{ route('admin.genres.show', $genre) }}">Lihat</x-atoms.button>

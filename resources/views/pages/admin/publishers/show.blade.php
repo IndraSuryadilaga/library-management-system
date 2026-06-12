@@ -14,18 +14,6 @@
         </x-atoms.button>
     </div>
 
-    @php
-        $publisherDetails = [
-            ['label' => 'ID Penerbit', 'value' => $publisher->id, 'isMono' => true],
-            ['label' => 'Nama Penerbit', 'value' => $publisher->name],
-            ['label' => 'Email', 'value' => $publisher->email ?? '-'],
-            ['label' => 'Telepon', 'value' => $publisher->phone ?? '-'],
-            ['label' => 'Alamat', 'value' => $publisher->address ?? '-', 'fullWidth' => true],
-            ['label' => 'Dibuat pada', 'value' => $publisher->created_at->format('d F Y')],
-            ['label' => 'Diperbarui pada', 'value' => $publisher->updated_at->format('d F Y')],
-        ];
-    @endphp
-
     <x-organisms.show-card :items="$publisherDetails">
         <x-slot:actions>
             <x-atoms.button variant="primary" href="{{ route('admin.publishers.edit', $publisher) }}">

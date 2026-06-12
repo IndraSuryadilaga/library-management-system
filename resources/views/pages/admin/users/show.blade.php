@@ -14,17 +14,6 @@
         </x-atoms.button>
     </div>
 
-    @php
-        $userDetails = [
-            ['label' => 'ID Pengguna', 'value' => $user->id, 'isMono' => true],
-            ['label' => 'Nama', 'value' => $user->name],
-            ['label' => 'Email', 'value' => $user->email],
-            ['label' => 'Role', 'value' => $user->role],
-            ['label' => 'Dibuat pada', 'value' => $user->created_at->format('d F Y')],
-            ['label' => 'Diperbarui pada', 'value' => $user->updated_at->format('d F Y')],
-        ];
-    @endphp
-
     <x-organisms.show-card :items="$userDetails">
         <x-slot:actions>
             <x-atoms.button variant="primary" href="{{ route('admin.users.edit', $user) }}">

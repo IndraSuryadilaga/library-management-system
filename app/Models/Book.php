@@ -42,4 +42,34 @@ class Book extends Model
     {
         return $this->hasMany(Item::class);
     }
+
+    public function scopeFilter($query, array $filters): void
+    {
+        // Search filter
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            $searchTerm = '%' . trim($search) . '%';
+            $query->where(function ($q) use ($searchTerm) {
+                // Menggunakan whereRaw LOWER untuk mengatasi case-sensitivity jika beda DB
+                $q->whereRaw('LOWER(title) LIKE LOWER(?)', [$searchTerm])
+                    ->orWhereRaw('LOWER(isbn) LIKE LOWER(?)', [$searchTerm]);
+            });
+        });
+
+        // Author filter
+        $query->when($filters['author_id'] ?? false, function ($query, $authorId) {
+            $query->where('author_id', $authorId);
+        });
+
+        // Publisher filter
+        $query->when($filters['publisher_id'] ?? false, function ($query, $publisherId) {
+            $query->where('publisher_id', $publisherId);
+        });
+
+        // Genre filter
+        $query->when($filters['genre_id'] ?? false, function ($query, $genreId) {
+            $query->whereHas('genres', function ($q) use ($genreId) {
+                $q->where('genres.id', $genreId);
+            });
+        });
+    }
 }

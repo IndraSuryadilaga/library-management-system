@@ -11,10 +11,29 @@ class GenreController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $genres = Genre::latest()->paginate(10);
-        return view('pages.admin.genres.index', compact('genres'));
+        $genres = Genre::filter($request->only(['search', 'start_date', 'end_date']))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        $genreFilters = [
+            [
+                'name' => 'start_date',
+                'label' => 'Dari Tanggal',
+                'type' => 'date',
+                'value' => request('start_date')
+            ],
+            [
+                'name' => 'end_date',
+                'label' => 'Sampai Tanggal',
+                'type' => 'date',
+                'value' => request('end_date')
+            ]
+        ];
+
+        return view('pages.admin.genres.index', compact('genres', 'genreFilters'));
     }
 
     /**
@@ -22,7 +41,11 @@ class GenreController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.genres.create');
+        $genreFields = [
+            ['name' => 'name', 'label' => 'Nama Genre', 'value' => old('name'), 'required' => true, 'fullWidth' => true],
+        ];
+
+        return view('pages.admin.genres.create', compact('genreFields'));
     }
 
     /**
@@ -45,7 +68,15 @@ class GenreController extends Controller
      */
     public function show(Genre $genre)
     {
-        return view('pages.admin.genres.show', compact('genre'));
+        $genreDetails = [
+            ['label' => 'ID Genre', 'value' => $genre->id, 'isMono' => true],
+            ['label' => 'Nama Genre', 'value' => $genre->name],
+            ['label' => 'Jumlah Buku', 'value' => $genre->books()->count(), 'isMono' => true],
+            ['label' => 'Dibuat pada', 'value' => $genre->created_at->format('d F Y')],
+            ['label' => 'Diperbarui pada', 'value' => $genre->updated_at->format('d F Y')],
+        ];
+
+        return view('pages.admin.genres.show', compact('genre', 'genreDetails'));
     }
 
     /**
@@ -53,7 +84,11 @@ class GenreController extends Controller
      */
     public function edit(Genre $genre)
     {
-        return view('pages.admin.genres.edit', compact('genre'));
+        $genreFields = [
+            ['name' => 'name', 'label' => 'Nama Genre', 'value' => old('name', $genre->name), 'required' => true, 'fullWidth' => true],
+        ];
+
+        return view('pages.admin.genres.edit', compact('genre', 'genreFields'));
     }
 
     /**

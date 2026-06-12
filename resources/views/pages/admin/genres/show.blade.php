@@ -14,15 +14,6 @@
         </x-atoms.button>
     </div>
 
-    @php
-        $genreDetails = [
-            ['label' => 'ID Genre', 'value' => $genre->id, 'isMono' => true],
-            ['label' => 'Nama Genre', 'value' => $genre->name],
-            ['label' => 'Dibuat pada', 'value' => $genre->created_at->format('d F Y')],
-            ['label' => 'Diperbarui pada', 'value' => $genre->updated_at->format('d F Y')],
-        ];
-    @endphp
-
     <x-organisms.show-card :items="$genreDetails">
         <x-slot:actions>
             <x-atoms.button variant="primary" href="{{ route('admin.genres.edit', $genre) }}">

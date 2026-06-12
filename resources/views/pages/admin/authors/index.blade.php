@@ -14,6 +14,14 @@
         </x-atoms.button>
     </div>
 
+    <x-organisms.filter-form
+        :action="route('admin.authors.index')"
+        :resetUrl="route('admin.authors.index')"
+        searchLabel="Cari Nama"
+        :searchValue="request('search')"
+        :filters="$authorFilters"
+    />
+
     @if (session('success'))
         <div class="bg-sage-200/50 border border-sage-200 text-sage-600 px-4 py-3 rounded-card relative mb-bento-gap" role="alert">
             <strong class="font-bold">Success!</strong>
@@ -24,9 +32,9 @@
     <x-molecules.table :headers="['ID', 'Nama', 'Tanggal Dibuat', 'Aksi']">
         @forelse ($authors as $author)
             <tr class="border-b border-cream-200 hover:bg-cream-100/70 transition-colors duration-150">
-                <td class="px-6 py-4 font-mono text-bark-600/80">{{ $author->id }}</td>
+                <td class="px-6 py-4 font-mono text-bark-400">{{ $author->id }}</td>
                 <td class="px-6 py-4 font-medium text-bark-600/80">{{ $author->name }}</td>
-                <td class="px-6 py-4 font-body text-bark-600/80">{{ $author->created_at->format('d M Y') }}</td>
+                <td class="px-6 py-4 font-body text-dusty">{{ $author->created_at->format('d M Y') }}</td>
                 <td class="px-6 py-4 text-center">
                     <div class="flex items-center justify-center space-x-3">
                         <x-atoms.button variant="tertiary" href="{{ route('admin.authors.show', $author) }}">Lihat</x-atoms.button>

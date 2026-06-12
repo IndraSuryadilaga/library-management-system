@@ -34,4 +34,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function scopeFilter($query, array $filters): void
+    {
+        // Search filter by name or email
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            $searchTerm = '%' . trim($search) . '%';
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereRaw('LOWER(name) LIKE LOWER(?)', [$searchTerm])
+                    ->orWhereRaw('LOWER(email) LIKE LOWER(?)', [$searchTerm]);
+            });
+        });
+
+        // Role filter
+        $query->when($filters['role'] ?? false, function ($query, $role) {
+            $query->where('role', $role);
+        });
+    }
 }

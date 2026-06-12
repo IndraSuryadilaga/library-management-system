@@ -29,57 +29,12 @@
         <form action="{{ route('admin.books.update', $book) }}" method="POST">
             @csrf
             @method('PUT')
-            @php
-                // Konfigurasi Field untuk Form Buku
-                $bookFields = [
-                    [
-                        'name' => 'title',
-                        'label' => 'Judul Buku',
-                        'value' => old('title', $book?->title),
-                        'required' => true,
-                        'fullWidth' => true
-                    ],
-                    [
-                        'name' => 'author_id',
-                        'label' => 'Penulis',
-                        'type' => 'select',
-                        'options' => $authors->pluck('name', 'id')->toArray(),
-                        'value' => old('author_id', $book?->author_id),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'publisher_id',
-                        'label' => 'Penerbit',
-                        'type' => 'select',
-                        'options' => $publishers->pluck('name', 'id')->toArray(),
-                        'value' => old('publisher_id', $book?->publisher_id),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'publication_year',
-                        'label' => 'Tahun Terbit',
-                        'type' => 'number',
-                        'value' => old('publication_year', $book?->publication_year),
-                        'required' => true
-                    ],
-                    [
-                        'name' => 'isbn',
-                        'label' => 'ISBN',
-                        'value' => old('isbn', $book?->isbn)
-                    ],
-                    [
-                        'name' => 'genres',
-                        'label' => 'Genre',
-                        'type' => 'select',
-                        'multiple' => true,
-                        'options' => $genres->pluck('name', 'id')->toArray(),
-                        'value' => old('genres', $book?->genres->pluck('id')->toArray() ?? []),
-                        'fullWidth' => true
-                    ],
-                ];
-            @endphp
 
-            <x-organisms.dynamic-form :fields="$bookFields" />
+            <x-organisms.dynamic-form
+                :fields="$bookFields"
+                :cancelUrl="route('admin.books.index')"
+                submitLabel="Perbarui Buku"
+            />
         </form>
     </div>
 </div>

@@ -14,6 +14,14 @@
         </x-atoms.button>
     </div>
 
+    <x-organisms.filter-form
+        :action="route('admin.fines.index')"
+        :resetUrl="route('admin.fines.index')"
+        searchLabel="Cari Denda" {{-- No direct search field, but keeping it for consistency --}}
+        :searchValue="request('search')"
+        :filters="$fineFilters"
+    />
+
     @if (session('success'))
         <div class="bg-sage-200/50 border border-sage-200 text-sage-600 px-4 py-3 rounded-card relative mb-bento-gap" role="alert">
             <strong class="font-bold">Success!</strong>
@@ -25,7 +33,7 @@
         @forelse ($fines as $fine)
             <tr class="border-b border-cream-200 hover:bg-cream-100/70 transition-colors duration-150">
                 <td class="px-6 py-4 font-mono text-bark-400">{{ $fine->id }}</td>
-                <td class="px-6 py-4 font-medium text-bark-600">{{ $fine->user->name }}</td>
+                <td class="px-6 py-4 font-medium text-bark-600/80">{{ $fine->user->name }}</td>
                 <td class="px-6 py-4 font-medium text-bark-600">{{ $fine->loan->id }}</td>
                 <td class="px-6 py-4 font-body text-dusty">{{ $fine->amount }}</td>
                 <td class="px-6 py-4 font-body text-dusty">{{ $fine->reason }}</td>

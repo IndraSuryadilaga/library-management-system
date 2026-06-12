@@ -28,22 +28,11 @@
         <div class="bg-parchment border border-cream-200 rounded-card-lg p-6 paper-grain">
             <form action="{{ route('admin.genres.store') }}" method="POST">
                 @csrf
-
-                @php
-                    $genreFields = [
-                        [
-                            'name' => 'name',
-                            'label' => 'Nama Genre',
-                            'value' => old('name'),
-                            'required' => true,
-                            'fullWidth' => true
-                        ]
-                    ];
-                @endphp
-
-                {{-- Panggil Dynamic Form Organism --}}
-                <x-organisms.dynamic-form :fields="$genreFields" />
-
+                <x-organisms.dynamic-form
+                    :fields="$genreFields"
+                    :cancelUrl="route('admin.genres.index')"
+                    submitLabel="Simpan Genre"
+                />
             </form>
         </div>
     </div>

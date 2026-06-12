@@ -14,19 +14,6 @@
         </x-atoms.button>
     </div>
 
-    @php
-        $fineDetails = [
-            ['label' => 'ID Denda', 'value' => $fine->id, 'isMono' => true],
-            ['label' => 'Pengguna', 'value' => $fine->user->name],
-            ['label' => 'Peminjaman', 'value' => $fine->loan->id, 'isMono' => true],
-            ['label' => 'Jumlah', 'value' => 'Rp ' . number_format($fine->amount, 2, ',', '.')],
-            ['label' => 'Alasan', 'value' => $fine->reason, 'fullWidth' => true],
-            ['label' => 'Dibayar Pada', 'value' => $fine->paid_at?->format('d F Y') ?? '-'],
-            ['label' => 'Dibuat pada', 'value' => $fine->created_at->format('d F Y')],
-            ['label' => 'Diperbarui pada', 'value' => $fine->updated_at->format('d F Y')],
-        ];
-    @endphp
-
     <x-organisms.show-card :items="$fineDetails">
         <x-slot:actions>
             <x-atoms.button variant="primary" href="{{ route('admin.fines.edit', $fine) }}">

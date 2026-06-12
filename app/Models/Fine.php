@@ -38,4 +38,35 @@ class Fine extends Model
     {
         return $this->belongsTo(Loan::class);
     }
+
+    public function scopeFilter($query, array $filters): void
+    {
+        // User filter
+        $query->when($filters['user_id'] ?? false, function ($query, $userId) {
+            $query->where('user_id', $userId);
+        });
+
+        // Loan filter
+        $query->when($filters['loan_id'] ?? false, function ($query, $loanId) {
+            $query->where('loan_id', $loanId);
+        });
+
+        // Payment status filter
+        $query->when($filters['paid_status'] ?? false, function ($query, $paidStatus) {
+            if ($paidStatus == 'paid') {
+                $query->whereNotNull('paid_at');
+            } elseif ($paidStatus == 'unpaid') {
+                $query->whereNull('paid_at');
+            }
+        });
+
+        // Date range filter for created_at
+        $query->when($filters['start_date'] ?? false, function ($query, $startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
+        });
+
+        $query->when($filters['end_date'] ?? false, function ($query, $endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
+        });
+    }
 }

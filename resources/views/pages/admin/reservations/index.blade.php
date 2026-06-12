@@ -14,6 +14,14 @@
         </x-atoms.button>
     </div>
 
+    <x-organisms.filter-form
+        :action="route('admin.reservations.index')"
+        :resetUrl="route('admin.reservations.index')"
+        searchLabel="Cari Reservasi"
+        :searchValue="request('search')"
+        :filters="$reservationFilters"
+    />
+
     @if (session('success'))
         <div class="bg-sage-200/50 border border-sage-200 text-sage-600 px-4 py-3 rounded-card relative mb-bento-gap" role="alert">
             <strong class="font-bold">Success!</strong>
@@ -25,10 +33,10 @@
         @forelse ($reservations as $reservation)
             <tr class="border-b border-cream-200 hover:bg-cream-100/70 transition-colors duration-150">
                 <td class="px-6 py-4 font-mono text-bark-400">{{ $reservation->id }}</td>
-                <td class="px-6 py-4 font-medium text-bark-600">{{ $reservation->user->name }}</td>
-                <td class="px-6 py-4 font-medium text-bark-600">{{ $reservation->book->title }}</td>
+                <td class="px-6 py-4 font-medium text-bark-600/80">{{ $reservation->user->name }}</td>
+                <td class="px-6 py-4 font-medium text-bark-600/80">{{ $reservation->book->title }}</td>
                 <td class="px-6 py-4 font-body text-dusty">{{ $reservation->reservation_date }}</td>
-                <td class="px-6 py-4 font-body text-dusty">{{ $reservation->status }}</td>
+                <td class="px-6 py-4 font-body text-bark-600/80">{{ $reservation->status }}</td>
                 <td class="px-6 py-4 text-center">
                     <div class="flex items-center justify-center space-x-3">
                         <x-atoms.button variant="tertiary" href="{{ route('admin.reservations.show', $reservation) }}">Lihat</x-atoms.button>

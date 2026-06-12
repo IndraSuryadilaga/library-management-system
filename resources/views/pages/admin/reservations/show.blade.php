@@ -14,19 +14,6 @@
         </x-atoms.button>
     </div>
 
-    @php
-        $reservationDetails = [
-            ['label' => 'ID Reservasi', 'value' => $reservation->id, 'isMono' => true],
-            ['label' => 'Pengguna', 'value' => $reservation->user->name],
-            ['label' => 'Buku', 'value' => $reservation->book->title],
-            ['label' => 'Item', 'value' => $reservation->item->barcode ?? '-', 'isMono' => true],
-            ['label' => 'Tanggal Reservasi', 'value' => $reservation->reservation_date],
-            ['label' => 'Status', 'value' => $reservation->status],
-            ['label' => 'Dibuat pada', 'value' => $reservation->created_at->format('d F Y')],
-            ['label' => 'Diperbarui pada', 'value' => $reservation->updated_at->format('d F Y')],
-        ];
-    @endphp
-
     <x-organisms.show-card :items="$reservationDetails">
         <x-slot:actions>
             <x-atoms.button variant="primary" href="{{ route('admin.reservations.edit', $reservation) }}">

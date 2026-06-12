@@ -15,7 +15,7 @@
 <body class="bg-cream-50 font-body antialiased">
 @include('components.organisms.navigation-menu')
 
-<main class="max-w-7xl mx-auto mt-8 p-4 min-h-screen">
+<main class="max-w-7xl mx-auto p-4 min-h-screen">
     @yield('content')
 </main>
 

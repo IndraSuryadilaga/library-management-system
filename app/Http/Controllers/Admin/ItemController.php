@@ -17,7 +17,7 @@ class ItemController extends Controller
         $items = Item::with('book')
             ->filter($request->only(['search', 'book_id', 'status']))
             ->latest()
-            ->paginate(10)
+            ->paginate(20)
             ->withQueryString();
 
         $books = Book::pluck('title', 'id');

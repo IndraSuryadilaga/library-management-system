@@ -19,7 +19,7 @@ class ReservationController extends Controller
         $reservations = Reservation::with(['user', 'book'])
             ->filter($request->only(['user_id', 'book_id', 'status', 'start_date', 'end_date']))
             ->latest()
-            ->paginate(10)
+            ->paginate(20)
             ->withQueryString();
 
         $users = User::pluck('name', 'id');

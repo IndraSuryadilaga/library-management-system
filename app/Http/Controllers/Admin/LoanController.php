@@ -18,7 +18,7 @@ class LoanController extends Controller
         $loans = Loan::with(['user', 'item.book'])
             ->filter($request->only(['user_id', 'item_id', 'start_date', 'end_date']))
             ->latest()
-            ->paginate(10)
+            ->paginate(20)
             ->withQueryString();
 
         $users = User::pluck('name', 'id');

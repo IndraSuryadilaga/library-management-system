@@ -17,7 +17,7 @@ class UserController extends Controller
     {
         $users = User::filter($request->only(['search', 'role']))
             ->latest()
-            ->paginate(10)
+            ->paginate(20)
             ->withQueryString();
 
         // Define filter configurations

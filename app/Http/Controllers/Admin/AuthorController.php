@@ -15,7 +15,7 @@ class AuthorController extends Controller
     {
         $authors = Author::filter($request->only(['search', 'start_date', 'end_date']))
             ->latest()
-            ->paginate(10)
+            ->paginate(20)
             ->withQueryString();
 
         $authorFilters = [

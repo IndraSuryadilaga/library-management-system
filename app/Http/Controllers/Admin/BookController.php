@@ -19,7 +19,7 @@ class BookController extends Controller
         $books = Book::with(['author', 'publisher', 'genres'])
             ->filter($request->only(['search', 'author_id', 'publisher_id', 'genre_id']))
             ->latest()
-            ->paginate(10)
+            ->paginate(20)
             ->withQueryString();
 
         $authors = Author::pluck('name', 'id');
@@ -103,7 +103,7 @@ class BookController extends Controller
             'title' => 'required|string|max:255',
             'author_id' => 'required|exists:authors,id',
             'publisher_id' => 'required|exists:publishers,id',
-            'publication_year' => 'required|integer|min:1000|max:' . date('Y'),
+            'publication_year' => 'required|integer|gt:1800|lt:2024',
             'isbn' => 'nullable|string|max:20|unique:books,isbn',
             'genres' => 'nullable|array',
             'genres.*' => 'exists:genres,id',
@@ -192,7 +192,7 @@ class BookController extends Controller
             'title' => 'required|string|max:255',
             'author_id' => 'required|exists:authors,id',
             'publisher_id' => 'required|exists:publishers,id',
-            'publication_year' => 'required|integer|min:1000|max:' . date('Y'),
+            'publication_year' => 'required|integer|gt:1800|lt:2024',
             'isbn' => 'nullable|string|max:20|unique:books,isbn,' . $book->id,
             'genres' => 'nullable|array',
             'genres.*' => 'exists:genres,id',

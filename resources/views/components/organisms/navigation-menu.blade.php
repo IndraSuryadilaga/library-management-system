@@ -1,12 +1,12 @@
-<nav x-data="{ mobileMenuOpen: false }" class="sticky top-0 z-50 pt-6 p-4 max-w-7xl mx-auto">
+<nav x-data="{ mobileMenuOpen: false }" class="sticky top-0 z-100 pt-6 p-4 max-w-7xl mx-auto">
     @php
         $isAdminView = auth()->check() && auth()->user()->role === 'admin';
     @endphp
 
     {{-- Tambahkan z-20 agar dropdown/humbergur tidak tertimpa menu admin di bawahnya --}}
-    <div class="shadow-navbar relative z-20 bg-white text-bark-700 flex items-center justify-between gap-8 px-1 py-1 rounded-4xl">
+    <div class="shadow-navbar relative z-20 bg-white flex items-center justify-between gap-8 px-1 py-1 rounded-4xl">
         <a href="/" class="flex items-center ml-4 gap-2.5">
-            <span class="font-display text-2xl font-bold">Pustaka Nusantara</span>
+            <span class="font-display text-2xl font-bold pl-2 text-bark-500">Pustaka Nusantara</span>
         </a>
 
         <div class="hidden md:flex items-center gap-2">
@@ -28,7 +28,7 @@
         </div>
 
         <div class="flex md:hidden pr-3">
-            <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-bark-600 hover:text-bark-800 focus:outline-none p-2 rounded-full hover:bg-cream-100 transition-colors">
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-dusty hover:text-bark-800 focus:outline-none p-2 rounded-full hover:bg-cream-100 transition-colors">
                 <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -44,7 +44,7 @@
             {{-- hidden md:block menyembunyikan ini di mobile --}}
             <div class="hidden md:block shadow-navbar relative -mt-13 bg-white text-bark-700 px-1 py-1 pt-15 rounded-3xl z-10">
                 {{-- flex-wrap membuat menu turun ke baris baru jika layar mengecil --}}
-                <div class="flex flex-wrap items-center lg:justify-start justify-left gap-1 lg:px-4 px-2 pb-1">
+                <div class="flex flex-wrap items-center lg:justify-start justify-left gap-1">
                     <x-atoms.navigation-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                         Dashboard
                     </x-atoms.navigation-link>

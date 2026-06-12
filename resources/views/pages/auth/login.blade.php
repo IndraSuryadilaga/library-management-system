@@ -3,56 +3,72 @@
 @section('title', 'Login')
 
 @section('content')
-    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-            <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
-        </div>
+    <div class="flex min-h-full flex-col justify-center py-12 lg:px-8">
+        <div
+            class="sm:mx-auto sm:w-full sm:max-w-xl bg-parchment border border-cream-200 rounded-card-lg overflow-hidden paper-grain p-8">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold leading-9 tracking-tight text-bark-900">Sign in to your
+                    account</h2>
+                <p class="mt-2 text-sm text-dusty">
+                    Don't have an account?
+                    <x-atoms.button :href="route('register')" variant="tertiary">
+                        Sign up
+                    </x-atoms.button>
+                </p>
+            </div>
 
-        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            @if ($errors->any())
-                <div class="mt-6 bg-red-200 px-4 py-6">
-                    <ul class="list-disc list-inside text-sm text-red-600">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form action="{{ route('login') }}" class="space-y-6" method="POST">
-                @csrf
-                <div>
-                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
-                    <div class="mt-2">
-                        <input class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-                               id="email"
-                               name="email"
-                               type="email"
-                               value="{{old('email')}}"
-                               autocomplete="email"
-                               required
-                        >
+            <div class="mt-10">
+                @if ($errors->any())
+                    <div class="mt-6 bg-red-200 px-4 py-6 rounded-lg">
+                        <ul class="list-disc list-inside text-sm text-red-600">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
-                </div>
+                @endif
 
-                <div>
-                    <div class="flex items-center justify-between">
-                        <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
-                    </div>
-                    <div class="mt-2">
-                        <input class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-                               id="password"
-                               name="password"
-                               type="password"
-                               autocomplete="current-password"
-                               required>
-                    </div>
-                </div>
+                <form action="{{ route('login') }}" class="space-y-6" method="POST">
+                    @csrf
+                    <x-molecules.form-group name="email" label="Email address">
+                        <x-atoms.input id="email" name="email" type="email" value="{{ old('email') }}"
+                            autocomplete="email" required />
+                    </x-molecules.form-group>
 
-                <div>
-                    <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
-                </div>
-            </form>
+                    <x-molecules.form-group name="password" label="Password">
+                        <x-atoms.input id="password" name="password" type="password" autocomplete="current-password"
+                            required />
+                    </x-molecules.form-group>
+
+                    <div class="mt-8">
+                        <div class="my-4">
+                            <x-atoms.button type="submit" variant="primary" class="w-full">Sign in</x-atoms.button>
+                        </div>
+
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                                <div class="w-full border-t border-cream-200"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="bg-parchment px-2 text-dusty">Or continue with</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <x-atoms.button variant="secondary" class="w-full">
+                                <x-slot name="icon">
+                                    {{-- Placeholder for Google Icon --}}
+                                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12.5C5,8.75 8.36,5.73 12.19,5.73C15.19,5.73 17.5,6.7 17.5,6.7L19.43,4.82C19.43,4.82 16.91,3 12.19,3C6.42,3 2.03,7.23 2.03,12.5C2.03,17.77 6.42,22 12.19,22C17.96,22 21.54,18.22 21.54,12.81C21.54,12.03 21.47,11.56 21.35,11.1Z" />
+                                    </svg>
+                                </x-slot>
+                                <span>Continue with Google</span>
+                            </x-atoms.button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 @endsection

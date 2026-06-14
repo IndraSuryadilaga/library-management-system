@@ -35,7 +35,7 @@
                 <td class="px-6 py-4 font-mono text-bark-400">{{ $book->id }}</td>
                 <td class="px-6 py-4">
                     @if ($book->cover)
-                        <img src="{{ asset('storage/' . $book->cover) }}" alt="Cover" class="h-16 w-auto">
+                        <img src="{{ $book->cover }}" alt="Cover" class="h-16 w-auto">
                     @else
                         -
                     @endif

@@ -106,7 +106,7 @@ class BookController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'isbn' => 'required|string|unique:books,isbn',
-            'publication_year' => 'required|digits:4',
+            'publication_year' => 'required|digits:4|gt:1800|lt:2024',
             'author_id' => 'required|exists:authors,id',
             'publisher_id' => 'required|exists:publishers,id',
             'genres' => 'required|array',

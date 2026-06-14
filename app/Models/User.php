@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -22,11 +21,6 @@ class User extends Authenticatable
         return static::query()->create($credential);
     }
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -37,7 +31,6 @@ class User extends Authenticatable
 
     public function scopeFilter($query, array $filters): void
     {
-        // Search filter by name or email
         $query->when($filters['search'] ?? false, function ($query, $search) {
             $searchTerm = '%' . trim($search) . '%';
             $query->where(function ($q) use ($searchTerm) {
@@ -46,7 +39,6 @@ class User extends Authenticatable
             });
         });
 
-        // Role filter
         $query->when($filters['role'] ?? false, function ($query, $role) {
             $query->where('role', $role);
         });

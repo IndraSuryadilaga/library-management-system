@@ -29,10 +29,17 @@
         </div>
     @endif
 
-    <x-molecules.table :headers="['ID', 'Judul', 'Penulis', 'Penerbit', 'ISBN', 'Tahun', 'Aksi']">
+    <x-molecules.table :headers="['ID', 'Cover', 'Judul', 'Penulis', 'Penerbit', 'ISBN', 'Tahun', 'Aksi']">
         @forelse ($books as $book)
             <tr class="border-b border-cream-200 hover:bg-cream-100/70 transition-colors duration-150">
                 <td class="px-6 py-4 font-mono text-bark-400">{{ $book->id }}</td>
+                <td class="px-6 py-4">
+                    @if ($book->cover)
+                        <img src="{{ asset('storage/' . $book->cover) }}" alt="Cover" class="h-16 w-auto">
+                    @else
+                        -
+                    @endif
+                </td>
                 <td class="px-6 py-4 font-medium text-bark-600">{{ $book->title }}</td>
                 <td class="px-6 py-4 font-body text-dusty">{{ $book->author->name }}</td>
                 <td class="px-6 py-4 font-body text-dusty">{{ $book->publisher->name }}</td>
@@ -52,7 +59,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="6" class="text-center py-12">
+                <td colspan="8" class="text-center py-12">
                     <div class="flex flex-col items-center">
                         <span class="text-4xl mb-2">📚</span>
                         <p class="font-body text-dusty">Tidak ada data buku.</p>

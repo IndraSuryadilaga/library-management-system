@@ -8,6 +8,7 @@ use App\Models\Author;
 use App\Models\Publisher;
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
@@ -88,6 +89,9 @@ class BookController extends Controller
                 'name' => 'genres', 'label' => 'Genre', 'type' => 'select', 'multiple' => true,
                 'options' => $genres, 'value' => old('genres', []), 'fullWidth' => true
             ],
+            [
+                'name' => 'cover', 'label' => 'Cover Buku', 'type' => 'file',
+            ],
         ];
 
         // Hanya passing bookFields
@@ -99,20 +103,27 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'isbn' => 'required|string|unique:books,isbn',
+            'publication_year' => 'required|digits:4',
             'author_id' => 'required|exists:authors,id',
             'publisher_id' => 'required|exists:publishers,id',
-            'publication_year' => 'required|integer|gt:1800|lt:2024',
-            'isbn' => 'nullable|string|max:20|unique:books,isbn',
-            'genres' => 'nullable|array',
+            'genres' => 'required|array',
             'genres.*' => 'exists:genres,id',
+            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $book = Book::create($request->only('title', 'author_id', 'publisher_id', 'publication_year', 'isbn'));
+        $bookData = $validated;
+
+        if ($request->hasFile('cover')) {
+            $bookData['cover'] = $request->file('cover')->store('covers', 'public');
+        }
+
+        $book = Book::create($bookData);
 
         if ($request->has('genres')) {
-            $book->genres()->sync($request->genres);
+            $book->genres()->sync($validated['genres']);
         }
 
         return redirect()->route('admin.books.index')
@@ -178,6 +189,9 @@ class BookController extends Controller
                 'options' => $genres, 'value' => old('genres', $book->genres->pluck('id')->toArray() ?? []),
                 'fullWidth' => true
             ],
+            [
+                'name' => 'cover', 'label' => 'Cover Buku', 'type' => 'file',
+            ],
         ];
 
         return view('pages.admin.books.edit', compact('book', 'bookFields'));
@@ -188,7 +202,7 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'author_id' => 'required|exists:authors,id',
             'publisher_id' => 'required|exists:publishers,id',
@@ -196,12 +210,23 @@ class BookController extends Controller
             'isbn' => 'nullable|string|max:20|unique:books,isbn,' . $book->id,
             'genres' => 'nullable|array',
             'genres.*' => 'exists:genres,id',
+            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $book->update($request->only('title', 'author_id', 'publisher_id', 'publication_year', 'isbn'));
+        $bookData = $validated;
+
+        if ($request->hasFile('cover')) {
+            // Hapus cover lama jika ada
+            if ($book->cover) {
+                Storage::disk('public')->delete($book->cover);
+            }
+            $bookData['cover'] = $request->file('cover')->store('covers', 'public');
+        }
+
+        $book->update($bookData);
 
         if ($request->has('genres')) {
-            $book->genres()->sync($request->genres);
+            $book->genres()->sync($validated['genres']);
         } else {
             $book->genres()->detach();
         }
@@ -215,6 +240,11 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
+        // Hapus cover dari storage jika ada
+        if ($book->cover) {
+            Storage::disk('public')->delete($book->cover);
+        }
+
         $book->genres()->detach();
         $book->delete();
 

@@ -14,6 +14,13 @@
             </x-atoms.button>
         </div>
 
+        @if ($book->cover)
+            <div class="mb-4">
+                <img src="{{ asset($book->cover) }}" alt="Cover" class="mt-2 h-64 w-auto mx-auto rounded-lg shadow-lg">
+{{--                <img src="{{ asset('storage/' . $book->cover) }}" alt="Cover" class="mt-2 h-64 w-auto mx-auto rounded-lg shadow-lg">--}}
+            </div>
+        @endif
+
         <x-organisms.show-card :items="$bookDetails">
             <x-slot:actions>
                 <x-atoms.button variant="primary" href="{{ route('admin.books.edit', $book) }}">

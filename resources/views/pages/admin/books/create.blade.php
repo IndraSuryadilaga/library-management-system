@@ -26,7 +26,7 @@
         @endif
 
         <div class="bg-parchment border border-cream-200 rounded-card-lg p-6 paper-grain">
-            <form action="{{ route('admin.books.store') }}" method="POST">
+            <form action="{{ route('admin.books.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <x-organisms.dynamic-form

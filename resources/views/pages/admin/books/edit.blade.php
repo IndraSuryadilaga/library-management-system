@@ -26,9 +26,17 @@
     @endif
 
     <div class="bg-parchment border border-cream-200 rounded-card-lg p-6 paper-grain">
-        <form action="{{ route('admin.books.update', $book) }}" method="POST">
+        <form action="{{ route('admin.books.update', $book) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
+
+            @if ($book->cover)
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Cover Saat Ini</label>
+{{--                    <img src="{{ asset('storage/' . $book->cover) }}" alt="Cover" class="mt-2 h-48 w-auto">--}}
+                    <img src="{{ asset($book->cover) }}" alt="Cover" class="mt-2 h-64 w-auto mx-auto rounded-lg shadow-lg">
+                </div>
+            @endif
 
             <x-organisms.dynamic-form
                 :fields="$bookFields"
